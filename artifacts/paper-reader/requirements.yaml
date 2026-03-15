@@ -1,0 +1,11 @@
+packages:
+  "framer-motion": "Smooth layout transitions and animations for the elegant academic feel"
+  "react-markdown": "Rendering generated AI markdown content beautifully"
+  "remark-gfm": "Github flavored markdown for tables, citations, and formatting"
+  "lucide-react": "Clean icons for the sidebar navigation"
+
+images: []
+
+notes:
+  - Streaming endpoint /api/papers/:id/sections/:sectionKey/generate uses SSE and returns `data: {"content": "..."}` or `data: {"done": true}`
+  - Non-streaming API calls use the generated `@workspace/api-client-react` hooks

@@ -1,0 +1,225 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: papers
+    description: Paper analysis operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /papers:
+    post:
+      operationId: createPaper
+      tags: [papers]
+      summary: Submit a paper for analysis
+      description: Accepts paper text or arXiv URL and creates a paper record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePaperBody"
+      responses:
+        "201":
+          description: Paper created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Paper"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    get:
+      operationId: listPapers
+      tags: [papers]
+      summary: List all analyzed papers
+      responses:
+        "200":
+          description: List of papers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Paper"
+  /papers/{id}:
+    get:
+      operationId: getPaper
+      tags: [papers]
+      summary: Get a paper by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Paper found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Paper"
+        "404":
+          description: Paper not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /papers/{id}/sections/{sectionKey}:
+    get:
+      operationId: getPaperSection
+      tags: [papers]
+      summary: Get a specific section for a paper
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: sectionKey
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Section content
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaperSection"
+        "404":
+          description: Section not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /papers/{id}/sections/{sectionKey}/generate:
+    post:
+      operationId: generatePaperSection
+      tags: [papers]
+      summary: Generate or regenerate a paper section via SSE streaming
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: sectionKey
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: SSE stream of generated content
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        "404":
+          description: Paper not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+    CreatePaperBody:
+      type: object
+      properties:
+        text:
+          type: string
+          description: Full text of the paper
+        arxivUrl:
+          type: string
+          description: arXiv URL or ID
+      description: Provide either text or arxivUrl
+    Paper:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: ["string", "null"]
+        authors:
+          type: ["string", "null"]
+        inputText:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        sections:
+          type: array
+          items:
+            $ref: "#/components/schemas/PaperSectionSummary"
+      required:
+        - id
+        - inputText
+        - createdAt
+    PaperSectionSummary:
+      type: object
+      properties:
+        sectionKey:
+          type: string
+        generated:
+          type: boolean
+      required:
+        - sectionKey
+        - generated
+    PaperSection:
+      type: object
+      properties:
+        id:
+          type: integer
+        paperId:
+          type: integer
+        sectionKey:
+          type: string
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - paperId
+        - sectionKey
+        - content
+        - createdAt
