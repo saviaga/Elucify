@@ -173,7 +173,9 @@ export default function Home() {
 
     createPaperMutation.mutate({ data: payload }, {
       onSuccess: (data) => {
-        setLocation(`/papers/${data.id}`);
+        const params = new URLSearchParams(window.location.search);
+        const section = params.get("section");
+        setLocation(section ? `/papers/${data.id}?section=${section}` : `/papers/${data.id}`);
       },
       onError: (error: any) => {
         if (error?.status === 401) {

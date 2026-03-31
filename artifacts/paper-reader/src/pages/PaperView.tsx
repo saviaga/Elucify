@@ -36,7 +36,10 @@ export default function PaperView() {
   const paperId = parseInt(id || "0", 10);
   const [, setLocation] = useLocation();
   
-  const [activeSection, setActiveSection] = useState("paper");
+  const [activeSection, setActiveSection] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("section") || "paper";
+  });
   const [collectionsOpen, setCollectionsOpen] = useState(false);
   const { config: apiKeyConfig } = useApiKey();
   const activeProviderLabel = apiKeyConfig
