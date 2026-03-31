@@ -1,0 +1,129 @@
+#elucify-panel {
+  font-family: 'Source Sans 3', 'Segoe UI', Arial, sans-serif;
+  margin: 20px 0;
+  border: 1px solid #e2d5c3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fdfaf7;
+  box-shadow: 0 2px 12px rgba(80, 50, 20, 0.08);
+}
+
+#elucify-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #7a5c3a;
+  color: #fdf8f3;
+}
+
+#elucify-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#elucify-logo-icon {
+  width: 18px;
+  height: 18px;
+  opacity: 0.95;
+}
+
+#elucify-header h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #fdf8f3;
+  font-family: 'Georgia', 'Playfair Display', serif;
+}
+
+#elucify-view-link {
+  font-size: 12px;
+  color: #f0e4d0;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.9;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+
+#elucify-view-link:hover {
+  opacity: 1;
+  color: #fff;
+  text-decoration: none;
+}
+
+#elucify-body {
+  padding: 14px 16px 16px;
+}
+
+#elucify-tagline {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: #6b5240;
+  line-height: 1.5;
+}
+
+#elucify-sections {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.elucify-section-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: #f3ece3;
+  border: 1px solid #e2d5c3;
+  border-radius: 999px;
+  font-size: 12px;
+  color: #5a3e28;
+  cursor: default;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.elucify-section-chip:hover {
+  background: #eae0d3;
+  border-color: #c9b99e;
+}
+
+.elucify-section-chip svg {
+  width: 12px;
+  height: 12px;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+#elucify-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  background: #7a5c3a;
+  color: #fdf8f3;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.2s, transform 0.1s;
+  border: none;
+  cursor: pointer;
+}
+
+#elucify-cta:hover {
+  background: #6b4f30;
+  transform: translateY(-1px);
+  text-decoration: none;
+  color: #fff;
+}
+
+#elucify-cta svg {
+  width: 14px;
+  height: 14px;
+}

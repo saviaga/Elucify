@@ -71,8 +71,15 @@ export default function Home() {
   const [collectionsPaperId, setCollectionsPaperId] = useState<number | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<"pdf" | "url">("pdf");
-  const [arxivUrl, setArxivUrl] = useState("");
+  const [activeTab, setActiveTab] = useState<"pdf" | "url">(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.has("arxiv") ? "url" : "pdf";
+  });
+  const [arxivUrl, setArxivUrl] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("arxiv");
+    return id ? `https://arxiv.org/abs/${id}` : "";
+  });
   const [pdfFile, setPdfFile] = useState<PdfFile | null>(null);
   const [isParsing, setIsParsing] = useState(false);
   const [parseError, setParseError] = useState<string | null>(null);
