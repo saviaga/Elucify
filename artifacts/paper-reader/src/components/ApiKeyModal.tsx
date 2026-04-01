@@ -166,7 +166,7 @@ export function ApiKeyModal({ open, onClose }: ApiKeyModalProps) {
 
         {!config && (
           <p className="text-xs text-center text-muted-foreground mt-3">
-            No key set — using shared credits
+            No API key — add yours to generate
           </p>
         )}
       </div>

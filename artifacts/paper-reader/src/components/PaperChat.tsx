@@ -125,7 +125,7 @@ export function PaperChat({ paperId }: PaperChatProps) {
 
   const providerLabel = config
     ? `${PROVIDER_META[config.provider].label} · ${PROVIDER_META[config.provider].model}`
-    : "Replit AI (shared)";
+    : "No API key set";
 
   return (
     <div className="flex flex-col h-full">
@@ -146,7 +146,7 @@ export function PaperChat({ paperId }: PaperChatProps) {
               {!config && (
                 <div className="flex items-center gap-1.5 mt-1 text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 px-3 py-1.5 rounded-full border border-amber-200 dark:border-amber-800">
                   <KeyRound className="w-3.5 h-3.5" />
-                  Using shared credits — add your own API key for unlimited chat
+                  Add your own API key to start chatting
                 </div>
               )}
             </div>

@@ -376,13 +376,18 @@ router.post("/papers/:id/sections/:sectionKey/generate", async (req: Request, re
     return;
   }
 
-  res.setHeader("Content-Type", "text/event-stream");
-  res.setHeader("Cache-Control", "no-cache");
-  res.setHeader("Connection", "keep-alive");
-
   const userApiKey = req.headers["x-api-key"] as string | undefined;
   const userProvider = req.headers["x-provider"] as string | undefined;
   const userModel = req.headers["x-model"] as string | undefined;
+
+  if (!userApiKey || !userProvider) {
+    res.status(400).json({ error: "NO_API_KEY: Add your own API key to generate analysis. Click the key icon to get started." });
+    return;
+  }
+
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
 
   let fullResponse = "";
 
@@ -511,23 +516,6 @@ router.post("/papers/:id/sections/:sectionKey/generate", async (req: Request, re
       const stream = await deepseekClient.chat.completions.create({
         model: "deepseek-chat",
         max_tokens: 8192,
-        messages: [
-          { role: "system", content: prompt },
-          { role: "user", content: paper.inputText },
-        ],
-        stream: true,
-      });
-      for await (const chunk of stream) {
-        const content = chunk.choices[0]?.delta?.content;
-        if (content) {
-          fullResponse += content;
-          res.write(`data: ${JSON.stringify({ content })}\n\n`);
-        }
-      }
-    } else {
-      const stream = await replitOpenai.chat.completions.create({
-        model: "gpt-5.2",
-        max_completion_tokens: 8192,
         messages: [
           { role: "system", content: prompt },
           { role: "user", content: paper.inputText },
@@ -791,13 +779,18 @@ router.post("/papers/:id/chat", async (req: Request, res: Response): Promise<voi
 PAPER CONTENT:
 ${paper.inputText}`;
 
-  res.setHeader("Content-Type", "text/event-stream");
-  res.setHeader("Cache-Control", "no-cache");
-  res.setHeader("Connection", "keep-alive");
-
   const userApiKey = req.headers["x-api-key"] as string | undefined;
   const userProvider = req.headers["x-provider"] as string | undefined;
   const userModel = req.headers["x-model"] as string | undefined;
+
+  if (!userApiKey || !userProvider) {
+    res.status(400).json({ error: "NO_API_KEY: Add your own API key to use chat. Click the key icon to get started." });
+    return;
+  }
+
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
 
   try {
     if (userApiKey && userProvider === "anthropic") {
@@ -828,17 +821,6 @@ ${paper.inputText}`;
       const stream = await client.chat.completions.create({
         model: cfg.model,
         max_tokens: 4096,
-        messages: [{ role: "system", content: systemPrompt }, ...messages as any],
-        stream: true,
-      });
-      for await (const chunk of stream) {
-        const content = chunk.choices[0]?.delta?.content;
-        if (content) res.write(`data: ${JSON.stringify({ content })}\n\n`);
-      }
-    } else {
-      const stream = await replitOpenai.chat.completions.create({
-        model: "gpt-5.2",
-        max_completion_tokens: 4096,
         messages: [{ role: "system", content: systemPrompt }, ...messages as any],
         stream: true,
       });
