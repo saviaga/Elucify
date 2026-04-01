@@ -1,31 +1,32 @@
 kind = "web"
-previewPath = "/"
-title = "Paper Reader"
-version = "1.0.0"
-id = "artifacts/paper-reader"
-router = "path"
+  previewPath = "/"
+  title = "Paper Reader"
+  version = "1.0.0"
+  id = "artifacts/paper-reader"
+  router = "path"
 
-[[integratedSkills]]
-name = "react-vite"
-version = "1.0.0"
+  [[integratedSkills]]
+  name = "react-vite"
+  version = "1.0.0"
 
-[[services]]
-localPort = 25230
-name = "web"
-paths = ["/"]
+  [[services]]
+  localPort = 25230
+  name = "web"
+  paths = ["/"]
 
-[services.development]
-run = "pnpm --filter @workspace/paper-reader run dev"
+  [services.development]
+  run = "pnpm --filter @workspace/paper-reader run dev"
 
-[services.env]
-PORT = "25230"
-BASE_PATH = "/"
+  [services.env]
+  PORT = "25230"
+  BASE_PATH = "/"
 
-[services.production]
-build = ["pnpm", "--filter", "@workspace/paper-reader", "run", "build"]
-publicDir = "artifacts/paper-reader/dist/public"
-serve = "static"
+  [services.production]
+  build = "pnpm --filter @workspace/paper-reader run build && pnpm --filter @workspace/api-server run build"
 
-[[services.production.rewrites]]
-from = "/*"
-to = "/index.html"
+  [services.production.run]
+  args = ["node", "artifacts/api-server/dist/index.cjs"]
+
+  [services.production.run.env]
+  BASE_PATH = "/"
+  
