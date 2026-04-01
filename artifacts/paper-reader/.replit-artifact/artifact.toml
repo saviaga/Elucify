@@ -23,10 +23,5 @@ kind = "web"
 
   [services.production]
   build = "pnpm --filter @workspace/paper-reader run build && pnpm --filter @workspace/api-server run build"
-
-  [services.production.run]
-  args = ["node", "artifacts/api-server/dist/index.cjs"]
-
-  [services.production.run.env]
-  BASE_PATH = "/"
+  run = "BASE_PATH=/ node artifacts/api-server/dist/index.cjs"
   
