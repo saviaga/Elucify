@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, createContext, useContext } from 'react';
 
 export type AiProvider = 'openai' | 'anthropic' | 'gemini' | 'deepseek';
 
@@ -9,7 +9,7 @@ export const PROVIDER_META: Record<AiProvider, { label: string; placeholder: str
   deepseek:  { label: 'DeepSeek', placeholder: 'sk-...',        model: 'deepseek-chat' },
 };
 
-interface ApiKeyConfig {
+export interface ApiKeyConfig {
   provider: AiProvider;
   apiKey: string;
 }
@@ -26,7 +26,16 @@ function loadConfig(): ApiKeyConfig | null {
   }
 }
 
-export function useApiKey() {
+export interface ApiKeyContextValue {
+  config: ApiKeyConfig | null;
+  saveConfig: (provider: AiProvider, apiKey: string) => void;
+  clearConfig: () => void;
+  headers: Record<string, string>;
+}
+
+export const ApiKeyContext = createContext<ApiKeyContextValue | null>(null);
+
+export function useApiKeyProvider(): ApiKeyContextValue {
   const [config, setConfig] = useState<ApiKeyConfig | null>(loadConfig);
 
   const saveConfig = useCallback((provider: AiProvider, apiKey: string) => {
@@ -57,4 +66,10 @@ export function useApiKey() {
   );
 
   return { config, saveConfig, clearConfig, headers };
+}
+
+export function useApiKey(): ApiKeyContextValue {
+  const ctx = useContext(ApiKeyContext);
+  if (!ctx) throw new Error('useApiKey must be used inside ApiKeyProvider');
+  return ctx;
 }
